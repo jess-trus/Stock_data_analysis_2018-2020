@@ -40,6 +40,8 @@ For i = 2 To lr1
 
             ws.Range("k" & row_number).Value = percentchange
         ws.Range("k" & row_number).NumberFormat = "0.00%"
+        
+'Conditional Formatting'
 
     If ws.Range("j" & row_number).Value > 0 Then
             ws.Range("j" & row_number).Interior.ColorIndex = 43
