@@ -1,0 +1,56 @@
+Sub try3()
+
+For Each ws In Worksheets
+'creating variables'
+Dim ticker As String
+Dim total As Double
+Dim first As Double
+Dim last_row As Long
+Dim yearlychange As Double
+Dim percentchange As Double
+Dim last As Double
+Dim row_number As Integer
+Dim lr1 As Long
+Dim lr2 As Long
+
+lr1 = Cells(Rows.Count, 1).End(xlUp).Row
+lr2 = Cells(Rows.Count, 9).End(xlUp).Row
+  total = 0
+    last_row = 2
+    row_number = 2
+
+For i = 2 To lr1
+    If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+        ticker = ws.Cells(i, 1).Value
+        total = total + ws.Cells(i, 7).Value
+        ws.Range("i" & row_number).Value = ticker
+        ws.Range("L" & row_number).Value = total
+        first = ws.Cells(last_row, 3).Value
+        last = ws.Cells(i, 6).Value
+        yearlychange = last - first
+        last_row = i + 1
+        ws.Range("j" & row_number).Value = yearlychange
+        
+                         If first = 0 Then
+                              percentchange = 0
+                         Else
+                              percentchange = yearlychange / first
+                        End If
+
+
+            ws.Range("k" & row_number).Value = percentchange
+        ws.Range("k" & row_number).NumberFormat = "0.00%"
+
+    If ws.Range("j" & row_number).Value > 0 Then
+            ws.Range("j" & row_number).Interior.ColorIndex = 43
+    Else
+            ws.Range("j" & row_number).Interior.ColorIndex = 38
+    End If
+
+            row_number = row_number + 1
+            total = 0
+    Else
+
+            total = total + ws.Cells(i, 7).Value
+    End If
+Next i
