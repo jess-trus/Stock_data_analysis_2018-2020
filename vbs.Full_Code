@@ -1,0 +1,110 @@
+Sub try3()
+
+For Each ws In Worksheets
+
+Dim ticker As String
+Dim total As Double
+Dim first As Double
+Dim last_row As Long
+Dim yearlychange As Double
+Dim percentchange As Double
+Dim last As Double
+Dim row_number As Integer
+Dim lr1 As Long
+Dim lr2 As Long
+
+lr1 = Cells(Rows.Count, 1).End(xlUp).Row
+lr2 = Cells(Rows.Count, 9).End(xlUp).Row
+
+
+ws.Cells(1, 9).Value = "Ticker"
+ws.Cells(1, 10).Value = "Yearly Change"
+ws.Cells(1, 11).Value = "Percent Change"
+ws.Cells(1, 12).Value = "Total Volume"
+ws.Cells(2, 14).Value = "Greatest % Increase"
+ws.Cells(3, 14).Value = "Greatest % Decrease"
+ws.Cells(4, 14).Value = "Greatest Total Volume"
+
+    total = 0
+    last_row = 2
+    row_number = 2
+
+For i = 2 To lr1
+    If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+        ticker = ws.Cells(i, 1).Value
+        total = total + ws.Cells(i, 7).Value
+        ws.Range("i" & row_number).Value = ticker
+        ws.Range("L" & row_number).Value = total
+        first = ws.Cells(last_row, 3).Value
+        last = ws.Cells(i, 6).Value
+        yearlychange = last - first
+        last_row = i + 1
+        ws.Range("j" & row_number).Value = yearlychange
+        
+                         If first = 0 Then
+                              percentchange = 0
+                         Else
+                              percentchange = yearlychange / first
+                        End If
+
+
+            ws.Range("k" & row_number).Value = percentchange
+        ws.Range("k" & row_number).NumberFormat = "0.00%"
+
+    If ws.Range("j" & row_number).Value > 0 Then
+            ws.Range("j" & row_number).Interior.ColorIndex = 43
+    Else
+            ws.Range("j" & row_number).Interior.ColorIndex = 38
+    End If
+
+            row_number = row_number + 1
+            total = 0
+    Else
+
+            total = total + ws.Cells(i, 7).Value
+    End If
+Next i
+
+Dim max As Double
+Dim min As Double
+
+
+Dim max_volume As Double
+
+
+max = 0
+min = 0
+max_volume = 0
+
+For i = 2 To lr2
+
+    If ws.Cells(i, 11).Value > max Then
+        max = ws.Cells(i, 11).Value
+        ws.Cells(2, 16).Value = max
+        ws.Cells(2, 15).Value = ws.Cells(i, 9).Value
+    End If
+Next i
+
+For i = 2 To lr2
+
+    If ws.Cells(i, 11).Value < min Then
+        min = ws.Cells(i, 11).Value
+        ws.Cells(3, 16).Value = min
+        ws.Cells(3, 15).Value = ws.Cells(i, 9).Value
+    End If
+Next i
+
+For i = 2 To lr2
+    If ws.Cells(i, 12).Value > max_volume Then
+        max_volume = ws.Cells(i, 12).Value
+        ws.Cells(4, 16).Value = max_volume
+        ws.Cells(4, 15).Value = ws.Cells(i, 9).Value
+    End If
+
+ ws.Cells(2, 16).NumberFormat = "0.00%"
+ws.Cells(3, 16).NumberFormat = "0.00%"
+
+
+Next i
+Next ws
+End Sub
